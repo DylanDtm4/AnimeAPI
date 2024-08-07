@@ -7,9 +7,9 @@ def clean_string(s):
 def parse_json_string(s):
     return json.loads(s)
     
-def fetch_paginated_data(base_url, pageNum):
+def fetch_paginated_data(base_url, pageNum): # (, pageNum)
     all_data = []    
-    url = f"{base_url}?page={pageNum}"
+    url = f"{base_url}" # ?page={pageNum}"
 
     try:
         response = requests.get(url)
@@ -24,10 +24,16 @@ def fetch_paginated_data(base_url, pageNum):
 
     return all_data
 
-def extract_genre_data(genres):
+def extract_genre_data_for_anime_input(genres):
     genre_data = []
     for genre in genres:
-        genre_data.append(genre['name'])
+        genre_data.append(genre["name"]) # {"name": genre['name']}
+    return genre_data
+
+def extract_genre_data_for_genre_input(genres):
+    genre_data = []
+    for genre in genres:
+        genre_data.append({"name": genre['name']})
     return genre_data
 
 def extract_anime_data(data):
@@ -40,10 +46,10 @@ def extract_anime_data(data):
         synopsis = parse_json_string(synopsis)
         if synopsis == None:
             synopsis = "None"
-        genres = extract_genre_data(anime["genres"])
-        explicit_genres = extract_genre_data(anime["explicit_genres"])
-        themes = extract_genre_data(anime["themes"])
-        demographics = extract_genre_data(anime["demographics"])
+        genres = extract_genre_data_for_anime_input(anime["genres"])
+        explicit_genres = extract_genre_data_for_anime_input(anime["explicit_genres"])
+        themes = extract_genre_data_for_anime_input(anime["themes"])
+        demographics = extract_genre_data_for_anime_input(anime["demographics"])
 
         anime_data.append({
             "img": img,
@@ -58,15 +64,24 @@ def extract_anime_data(data):
 
     # return json.dumps(anime_data, indent=2)
 
-def main(pageNum):
+def main(pageNum): # (pageNum) for anime input
+    
+    # inputting anime data
     URL = 'https://api.jikan.moe/v4/anime'
     data = fetch_paginated_data(URL, pageNum)
-    anime_data = extract_anime_data(data)
-
-
+    anime_data = extract_anime_data(data)    
     api_url = "http://127.0.0.1:8000/create-animes"
     response = requests.post(api_url, json=anime_data)
+    
+    '''
+    # inputting genre data
+    URL = 'https://api.jikan.moe/v4/genres/anime'
+    data = fetch_paginated_data(URL)
+    genre_data = extract_genre_data_for_genre_input(data)
 
+    api_url = "http://127.0.0.1:8000/create-genres"
+    response = requests.post(api_url, json=genre_data)
+    '''
     if response.status_code == 200:
         print("Data successfully posted to the API.")
         return 0
@@ -76,6 +91,6 @@ def main(pageNum):
 
 if __name__ == "__main__":
     import sys
-    page_num = int(sys.argv[1])
-    exit_code = main(page_num)
+    page_num = int(sys.argv[1]) # for anime input
+    exit_code = main(page_num) # (page_num) for anime input
     sys.exit(exit_code)

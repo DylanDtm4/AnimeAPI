@@ -4,4 +4,5 @@ client = MongoClient("mongodb+srv://dylandtm4:Dylan404736@anime-api.kaosex9.mong
 
 db = client.anime_db
 
-collection_name = db["anime_collection"]
+anime_collection = db["animes"]
+genre_collection = db["genres"]
