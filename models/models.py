@@ -10,6 +10,9 @@ class Anime(BaseModel):
     themes: Optional[List[str]] = None
     demographics: Optional[List[str]] = None
 
+class Genre(BaseModel):
+    name: str
+
 class Pagination(BaseModel):
     last_visible_page: int
     has_next_page: bool

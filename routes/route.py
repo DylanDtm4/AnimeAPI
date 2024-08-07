@@ -1,10 +1,10 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
-from models.models import Anime, Pagination, AnimeResponse
+from models.models import Anime, Genre
 from config.database import collection_name
-from schema.schemas import list_serial
+from schema.schemas import list_serial_animes, list_serial_genres
 from bson import ObjectId
-from utils.pagination import paginate, parse_genres, contains_genres
+from utils.pagination import parse_genres
 
 router = APIRouter()
 
@@ -29,7 +29,7 @@ async def get_animes(
     page: int = Query(1, gt=0),
     size: int = Query(25, gt=0, le=100)
 ):
-    animes = list_serial(collection_name.find(), page, size, genres)
+    animes = list_serial_animes(collection_name.find(), page, size, genres)
     return animes
 
 # POST Request Method
@@ -38,6 +38,19 @@ async def post_anime(animes: List[Anime]):
     anime_dicts = [anime.model_dump() for anime in animes]
     collection_name.insert_many(anime_dicts)
     return {"message": "Animes added"}
+
+# GET Request Method
+@router.get("/genres")
+async def get_genres():
+    genres = list_serial_genres(genres)
+    return genres
+
+# POST Request Method
+@router.post("/create-genres")
+async def post_genres(genres: List[Genre]):
+    genre_dicts = [genre.model_dump() for genre in genres]
+    collection_name.insert_many(genre_dicts)
+    return {"message": "Genres added"}
 
 # PUT Request Method
 @router.put("/animes/{id}")    
