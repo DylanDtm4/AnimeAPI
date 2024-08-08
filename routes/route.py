@@ -4,7 +4,7 @@ from models.models import Anime, Genre
 from config.database import anime_collection, genre_collection
 from schema.schemas import list_serial_animes, list_serial_genres
 from bson import ObjectId
-from utils.pagination import parse_genres
+from utils.util import parse_genres
 
 router = APIRouter()
 
@@ -20,8 +20,9 @@ async def get_animes(
     page: int = Query(1, gt=0),
     size: int = Query(25, gt=0, le=100)
 ):
-    animes = list_serial_animes(anime_collection.find(), page, size, genres)
-    return animes
+    animes = list(anime_collection.find()) 
+    result = list_serial_animes(animes, page, size, genres)
+    return result
 
 # POST Request Method
 @router.post("/create-animes")
@@ -44,9 +45,10 @@ async def post_genres(genres: List[Genre]):
     return {"message": "Genres added"}
 
 # PUT Request Method
-@router.put("/animes/{id}")    
+@router.put("/animes/{id}")
 async def update_anime(id: str, anime: Anime):
-    anime_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(anime)})
+    anime_collection.find_one_and_update(
+        {"_id": ObjectId(id)}, {"$set": dict(anime)})
 
 # DELETE Request Method
 @router.delete("/animes/{id}")
@@ -54,9 +56,10 @@ async def delete_anime(id: str):
     anime_collection.find_one_and_delete({"_id": ObjectId(id)})
 
 # PUT Request Method
-@router.put("/genres/{id}")    
+@router.put("/genres/{id}")
 async def update_anime(id: str, genre: Genre):
-    genre_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(genre)})
+    genre_collection.find_one_and_update(
+        {"_id": ObjectId(id)}, {"$set": dict(genre)})
 
 # DELETE Request Method
 @router.delete("/genres/{id}")

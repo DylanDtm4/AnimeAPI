@@ -1,4 +1,4 @@
-from utils.pagination import paginate, contains_genres
+from utils.util import paginate, contains_genres
 
 def individual_serial_anime(anime) -> dict:
     return {
@@ -13,8 +13,10 @@ def individual_serial_anime(anime) -> dict:
     }
 
 def list_serial_animes(animes, page: int, size: int, genres: list) -> dict:
-    filtered_animes = [anime for anime in animes if contains_genres(anime, genres)] if genres else animes
-    serialized_animes = [individual_serial_anime(anime) for anime in filtered_animes]
+    filtered_animes = [anime for anime in animes if contains_genres(
+        anime, genres)] if genres else animes
+    serialized_animes = [individual_serial_anime(
+        anime) for anime in filtered_animes]
     pagination_info, paginated_animes = paginate(serialized_animes, page, size)
 
     return {
