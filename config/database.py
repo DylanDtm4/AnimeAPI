@@ -6,3 +6,9 @@ db = client.anime_db
 
 anime_collection = db["animes"]
 genre_collection = db["genres"]
+
+# Dropping the 'animes' collection to fix corrupted api data
+# anime_collection.drop()
+
+# Dropping the 'genres' collection to fix corrupted api data
+# genre_collection.drop()

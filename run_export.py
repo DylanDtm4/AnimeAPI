@@ -9,7 +9,7 @@ export_script_path = os.path.join(current_dir, 'export.py')
 
 # inputting anime data into api db
 errors = []
-for i in range(1080, 1081):
+for i in range(1, 1080):
     print(f"Running iteration {i}")
     result = subprocess.run(["python", export_script_path, str(i)])
     if result.returncode != 0:
