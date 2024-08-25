@@ -33,11 +33,12 @@ def paginate(items, page: int, size: int):
     return pagination_info, paginated_items
 
 def contains_genres(anime, genre_ids):
-    combined_genres = (anime.get("genres", []) +
-                       anime.get("explicit_genres", []) +
-                       anime.get("themes", []) +
-                       anime.get("demographics", []))
-    return all(GENRES[genre_id] in combined_genres for genre_id in genre_ids)
+    combined_genre_ids = [
+    genre["ord_id"]
+    for category in ["genres", "explicit_genres", "themes", "demographics"]
+    for genre in anime.get(category, [])
+    ]
+    return all(genre_id in combined_genre_ids for genre_id in genre_ids)
 
 
 def parse_genres(genres: Optional[str] = Query(None)) -> Optional[List[int]]:

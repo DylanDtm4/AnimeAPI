@@ -1,17 +1,19 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
+class Genre(BaseModel):
+    ord_id: int
+    name: str
+
 class Anime(BaseModel):
+    ord_id: int
     img: str
     title: str
     synopsis: str
-    genres: Optional[List[str]] = None
-    explicit_genres: Optional[List[str]] = None
-    themes: Optional[List[str]] = None
-    demographics: Optional[List[str]] = None
-
-class Genre(BaseModel):
-    name: str
+    genres: Optional[List[Genre]] = None
+    explicit_genres: Optional[List[Genre]] = None
+    themes: Optional[List[Genre]] = None
+    demographics: Optional[List[Genre]] = None
 
 class Pagination(BaseModel):
     last_visible_page: int

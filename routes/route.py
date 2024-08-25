@@ -20,7 +20,7 @@ async def get_animes(
     page: int = Query(1, gt=0),
     size: int = Query(25, gt=0, le=100)
 ):
-    animes = list(anime_collection.find()) 
+    animes = list(anime_collection.find().sort("ord_id", 1))
     result = list_serial_animes(animes, page, size, genres)
     return result
 
@@ -34,7 +34,7 @@ async def post_anime(animes: List[Anime]):
 # GET Request Method
 @router.get("/genres")
 async def get_genres():
-    genres = list_serial_genres(genre_collection.find())
+    genres = list_serial_genres(genre_collection.find().sort("ord_id", 1))
     return genres
 
 # POST Request Method
